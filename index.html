@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f4f8f9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="オフィス課題調査">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>オフィスでのお困り事アンケート</title>
+<style>
+:root{--navy:#11344c;--blue:#2c79b3;--green:#73b84e;--bg:#f4f8f9;--line:#d7e2e7;--muted:#6b7a85}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--navy);font-family:-apple-system,BlinkMacSystemFont,'Yu Gothic',Meiryo,sans-serif}
+button,input{font:inherit} button{-webkit-tap-highlight-color:transparent}.hidden{display:none!important}
+.app{max-width:1366px;margin:auto;padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
+.head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px}
+h1{font-size:clamp(32px,4.2vw,58px);line-height:1.12;margin:0;font-weight:900}.sub{margin:8px 0 0;color:var(--muted);font-weight:700;font-size:17px}
+.admin{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;color:var(--muted);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,minmax(0,1fr));gap:14px;min-height:calc(100vh - 170px)}
+.choice{border:1.5px solid var(--line);background:#fff;border-radius:26px;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-shadow:0 8px 24px rgba(17,52,76,.07);color:var(--navy)}
+.choice:active{transform:scale(.985)}.choice:nth-child(5){grid-column:2}
+.ico{width:108px;height:108px;border-radius:28px;background:#edf7fb;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:18px}
+.choice:nth-child(even) .ico{background:#eef8ea}.lbl{font-size:clamp(26px,3vw,40px);font-weight:900;text-align:center}
+.foot{margin-top:8px;display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.stage{position:relative;min-height:calc(100vh - 28px);border-radius:26px;overflow:hidden;background:#eaf1f3;border:1px solid var(--line)}
+.stage img{width:100%;height:calc(100vh - 28px);object-fit:contain;display:block;background:#fff}
+.overlay{position:absolute;left:22px;right:22px;bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:18px}
+.cap{background:rgba(255,255,255,.94);padding:16px 20px;border-radius:18px;max-width:70%;box-shadow:0 10px 28px rgba(17,52,76,.12)}
+.cap h2{font-size:clamp(28px,3.3vw,44px);margin:0 0 4px}.cap p{margin:0;color:var(--muted)}
+.next{border:0;background:var(--navy);color:#fff;border-radius:16px;padding:16px 24px;min-width:200px;font-size:20px;font-weight:900}
+.adminGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px}.panel h2{margin:0 0 14px}
+label{display:block;font-weight:800;font-size:13px;margin-bottom:10px} input[type=text],input[type=password],input[type=file]{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:11px;padding:10px;min-height:44px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.btn{border:0;border-radius:11px;min-height:44px;padding:10px 14px;font-weight:800}.pri{background:var(--navy);color:#fff}.sec{background:#fff;border:1px solid var(--line);color:var(--navy)}.dan{background:#fff;border:1px solid #efc2bd;color:#b42318}
+.res{margin:12px 0}.rh{display:flex;justify-content:space-between;font-weight:800;font-size:14px}.bar{height:10px;background:#edf2f4;border-radius:99px;margin-top:5px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#49b7d5,#73b84e)}
+.imgset{display:grid;grid-template-columns:1fr 1fr;gap:10px}.imgrow{display:grid;grid-template-columns:110px 1fr;gap:10px;border:1px solid var(--line);border-radius:14px;padding:9px}.thumb{width:110px;height:72px;border-radius:9px;object-fit:cover;background:#eef5f7}.mini{font-size:11px;color:var(--muted);margin:3px 0}
+dialog{border:0;border-radius:20px;max-width:420px;width:calc(100% - 32px);padding:0} dialog::backdrop{background:rgba(0,0,0,.38)} .dlg{padding:22px}.small{font-size:12px;color:var(--muted)}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;min-height:auto}.choice:nth-child(5){grid-column:1/3}.adminGrid,.imgset{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="app">
+<section id="survey">
+  <div class="head">
+    <div><h1 id="q">オフィスでのお困り事はございますか？</h1><p class="sub">当てはまるものを1つお選びください</p></div>
+    <button id="adminBtn" class="admin" type="button">設定・集計</button>
+  </div>
+  <div class="grid">
+    <button class="choice" data-i="0" type="button"><div class="ico">👥</div><div class="lbl">① 会議室不足</div></button>
+    <button class="choice" data-i="1" type="button"><div class="ico">💬</div><div class="lbl">② 交流がない</div></button>
+    <button class="choice" data-i="2" type="button"><div class="ico">🔊</div><div class="lbl">③ 音響課題</div></button>
+    <button class="choice" data-i="3" type="button"><div class="ico">🌡️</div><div class="lbl">④ 温熱課題</div></button>
+    <button class="choice" data-i="4" type="button"><div class="ico">•••</div><div class="lbl">⑤ その他</div></button>
+  </div>
+  <div class="foot"><span>回答はこのiPad内に保存されます。</span><span id="count">回答数 0</span></div>
+</section>
+
+<section id="imageView" class="hidden">
+  <div class="stage">
+    <img id="hero" alt="">
+    <div class="overlay">
+      <div class="cap"><h2 id="heroTitle"></h2><p>ご回答ありがとうございます。選択された内容に対応する改善イメージを表示しています。</p></div>
+      <button id="nextBtn" class="next" type="button">次のお客様へ</button>
+    </div>
+  </div>
+</section>
+
+<section id="adminView" class="adminGrid hidden">
+  <div class="panel">
+    <h2>表示設定</h2>
+    <form id="settings">
+      <label>見出し<input id="qEdit" type="text"></label>
+      <label>選択肢1<input data-e="0" type="text"></label>
+      <label>選択肢2<input data-e="1" type="text"></label>
+      <label>選択肢3<input data-e="2" type="text"></label>
+      <label>選択肢4<input data-e="3" type="text"></label>
+      <label>選択肢5<input data-e="4" type="text"></label>
+      <label>管理PIN<input id="pinEdit" type="password" inputmode="numeric"></label>
+      <div class="btns"><button class="btn pri" type="submit">保存</button><button id="backBtn" class="btn sec" type="button">回答画面へ戻る</button></div>
+    </form>
+  </div>
+  <div class="panel">
+    <h2>回答集計 <span id="total" style="float:right"></span></h2>
+    <div id="results"></div>
+    <div class="btns"><button id="csv" class="btn sec" type="button">CSVを書き出す</button><button id="resetAns" class="btn dan" type="button">回答をリセット</button></div>
+    <p class="small" style="margin-top:12px">展示会終了時にはCSVを書き出して保存してください。</p>
+  </div>
+  <div class="panel" style="grid-column:1/-1">
+    <h2>表示画像の変更</h2>
+    <p class="small">今回アップロードいただいた5枚をデフォルト画像として組み込んでいます。必要に応じて、ここから後で差し替えできます。</p>
+    <div id="imgset" class="imgset"></div>
+    <div class="btns"><button id="resetImgs" class="btn sec" type="button">すべてデフォルト画像に戻す</button></div>
+  </div>
+</section>
+</main>
+
+<dialog id="pinDlg"><div class="dlg"><h2>管理画面</h2><form id="pinForm"><input id="pinCheck" type="password" inputmode="numeric" placeholder="PIN"><div id="pinMsg" style="color:#b42318;margin-top:6px"></div><div class="btns"><button class="btn pri" type="submit">開く</button><button id="pinCancel" class="btn sec" type="button">キャンセル</button></div></form></div></dialog>
+
+<script>
+(function(){
+const KEY="office-survey-default5-v1", DB="office-survey-default5-images", STORE="images";
+const defaultImagePaths=["default-1-meeting.png","default-2-exchange.png","default-3-acoustic.png","default-4-thermal.png","default-5-other.png"];
+const defaults={question:"オフィスでのお困り事はございますか？",labels:["会議室不足","交流がない","音響課題","温熱課題","その他"],counts:[0,0,0,0,0],log:[],pin:"1234"};
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s)); let state=load(), objUrl=null;
+function deepCopy(v){return JSON.parse(JSON.stringify(v))}
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(!x||!Array.isArray(x.labels)||x.labels.length!==5) return deepCopy(defaults); return {question:typeof x.question==="string"?x.question:defaults.question,labels:Array.isArray(x.labels)&&x.labels.length===5?x.labels:defaults.labels.slice(),counts:Array.isArray(x.counts)&&x.counts.length===5?x.counts.map(n=>Number(n)||0):[0,0,0,0,0],log:Array.isArray(x.log)?x.log:[],pin:/^[0-9]{4,8}$/.test(String(x.pin||""))?String(x.pin):"1234"}}catch(e){return deepCopy(defaults)}}
+function save(){localStorage.setItem(KEY, JSON.stringify(state))}
+function total(){return state.counts.reduce((a,b)=>a+b,0)}
+function dbopen(){return new Promise((ok,ng)=>{const r=indexedDB.open(DB,1); r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE)) r.result.createObjectStore(STORE)}; r.onsuccess=()=>ok(r.result); r.onerror=()=>ng(r.error)})}
+async function getImg(i){const db=await dbopen(); return new Promise((ok,ng)=>{const t=db.transaction(STORE,"readonly"), r=t.objectStore(STORE).get(String(i)); r.onsuccess=()=>ok(r.result||null); r.onerror=()=>ng(r.error)})}
+async function setImg(i,b){const db=await dbopen(); return new Promise((ok,ng)=>{const t=db.transaction(STORE,"readwrite"); t.objectStore(STORE).put(b,String(i)); t.oncomplete=()=>ok(); t.onerror=()=>ng(t.error)})}
+async function delImg(i){const db=await dbopen(); return new Promise((ok,ng)=>{const t=db.transaction(STORE,"readwrite"); t.objectStore(STORE).delete(String(i)); t.oncomplete=()=>ok(); t.onerror=()=>ng(t.error)})}
+async function clearImgs(){const db=await dbopen(); return new Promise((ok,ng)=>{const t=db.transaction(STORE,"readwrite"); t.objectStore(STORE).clear(); t.oncomplete=()=>ok(); t.onerror=()=>ng(t.error)})}
+function render(){$("#q").textContent=state.question; $$(".lbl").forEach((x,i)=>x.textContent=`${["①","②","③","④","⑤"][i]} ${state.labels[i]}`); $("#count").textContent="回答数 "+total()}
+async function showImage(i){if(objUrl){URL.revokeObjectURL(objUrl); objUrl=null} const customBlob=await getImg(i).catch(()=>null), img=$("#hero"); if(customBlob){objUrl=URL.createObjectURL(customBlob); img.src=objUrl}else{img.src=defaultImagePaths[i]} img.alt=state.labels[i]; $("#heroTitle").textContent=state.labels[i]; $("#survey").classList.add("hidden"); $("#imageView").classList.remove("hidden")}
+function back(){if(objUrl){URL.revokeObjectURL(objUrl); objUrl=null} $("#imageView").classList.add("hidden"); $("#adminView").classList.add("hidden"); $("#survey").classList.remove("hidden"); render()}
+$$(".choice").forEach(btn=>btn.addEventListener("click", async()=>{const i=Number(btn.dataset.i); if(!Number.isInteger(i)||i<0||i>4) return; state.counts[i]++; state.log.push({timestamp:new Date().toISOString(),choice:i+1,label:state.labels[i]}); save(); render(); await showImage(i)}));
+$("#nextBtn").addEventListener("click", back);
+function renderResults(){$("#total").textContent=total()+"件"; const box=$("#results"); box.innerHTML=""; const t=total(); state.labels.forEach((l,i)=>{const p=t?Math.round(state.counts[i]/t*100):0, dv=document.createElement("div"); dv.className="res"; dv.innerHTML=`<div class="rh"><span>${l}</span><span>${state.counts[i]}件 / ${p}%</span></div><div class="bar"><div class="fill" style="width:${p}%"></div></div>`; box.appendChild(dv)})}
+async function renderImgs(){const box=$("#imgset"); box.innerHTML=""; for(let i=0;i<5;i++){const customBlob=await getImg(i).catch(()=>null), row=document.createElement("div"); row.className="imgrow"; const im=document.createElement("img"); im.className="thumb"; if(customBlob){const u=URL.createObjectURL(customBlob); im.src=u; im.onload=()=>URL.revokeObjectURL(u)} else {im.src=defaultImagePaths[i]} const r=document.createElement("div"), s=document.createElement("strong"); s.textContent=(i+1)+". "+state.labels[i]; const m=document.createElement("div"); m.className="mini"; m.textContent=customBlob?"変更画像を使用中":"アップロード済みデフォルト画像を使用中"; const inp=document.createElement("input"); inp.type="file"; inp.accept="image/*"; inp.addEventListener("change", async()=>{const f=inp.files&&inp.files[0]; if(f){await setImg(i,f); await renderImgs()}}); const reset=document.createElement("button"); reset.type="button"; reset.className="btn sec"; reset.textContent="デフォルト画像に戻す"; reset.addEventListener("click", async()=>{await delImg(i); await renderImgs()}); r.append(s,m,inp,reset); row.append(im,r); box.appendChild(row)}}
+async function admin(){$("#survey").classList.add("hidden"); $("#imageView").classList.add("hidden"); $("#adminView").classList.remove("hidden"); $("#qEdit").value=state.question; $$("[data-e]").forEach((x,i)=>x.value=state.labels[i]); $("#pinEdit").value=state.pin; renderResults(); await renderImgs()}
+$("#adminBtn").addEventListener("click", ()=>{$("#pinCheck").value=""; $("#pinMsg").textContent=""; $("#pinDlg").showModal()});
+$("#pinCancel").addEventListener("click", ()=>$("#pinDlg").close());
+$("#pinForm").addEventListener("submit", e=>{e.preventDefault(); if($("#pinCheck").value===state.pin){$("#pinDlg").close(); admin()} else {$("#pinMsg").textContent="PINが違います。"}})
+$("#backBtn").addEventListener("click", back);
+$("#settings").addEventListener("submit", e=>{e.preventDefault(); const q=$("#qEdit").value.trim(), ls=$$("[data-e]").map(x=>x.value.trim()), p=$("#pinEdit").value.trim(); if(!q||ls.some(x=>!x)||!/^[0-9]{4,8}$/.test(p)){alert("入力内容を確認してください。"); return} state.question=q; state.labels=ls; state.pin=p; save(); render(); renderResults(); renderImgs(); alert("設定を保存しました。")});
+$("#resetAns").addEventListener("click", ()=>{if(confirm("回答をすべて削除しますか？")){state.counts=[0,0,0,0,0]; state.log=[]; save(); render(); renderResults()}});
+$("#resetImgs").addEventListener("click", async()=>{if(confirm("5項目すべてをデフォルト画像に戻しますか？")){await clearImgs(); await renderImgs()}});
+$("#csv").addEventListener("click", ()=>{const rows=[["timestamp","choice","label"], ...state.log.map(x=>[x.timestamp,x.choice,x.label])], esc=v=>`"${String(v).replace(/"/g,'""')}"`, csv="\uFEFF"+rows.map(r=>r.map(esc).join(",")).join("\r\n"), blob=new Blob([csv],{type:"text/csv;charset=utf-8"}), u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download="office-survey.csv"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000)});
+render();
+if("serviceWorker" in navigator){window.addEventListener("load", ()=>{navigator.serviceWorker.register("./sw.js?v=7").catch(()=>{})})}
+})();
+</script>
+</body>
+</html>

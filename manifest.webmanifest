@@ -1,0 +1,21 @@
+{
+  "name": "オフィスでのお困り事アンケート 5画像デフォルト版",
+  "short_name": "オフィス課題調査",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#f4f8f9",
+  "theme_color": "#f4f8f9",
+  "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
